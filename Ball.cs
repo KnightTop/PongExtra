@@ -13,6 +13,9 @@ public partial class Ball : CharacterBody2D
 	public StaticBody2D _Player;
 	[Export]
 	public StaticBody2D _CPU;
+	[Export]
+	public BackGround BackGround;
+	private float TouchTimer = 1f;
 
 	public override void _Ready()
 	{
@@ -22,20 +25,37 @@ public partial class Ball : CharacterBody2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _PhysicsProcess(double delta)
 	{
-		var Collision = MoveAndCollide(Direction * Speed * (float)delta);
-		if (Collision != null)
+		if (BackGround.IsPause == false)
 		{
-			var Collider = Collision.GetCollider();
-			if (Collider == _Player || Collider == _CPU)
+			var Collision = MoveAndCollide(Direction * Speed * (float)delta);
+			if (Collision != null)
 			{
-				Speed += ACCELERATION;
-				Direction = NewDirection(Collision);
+				var Collider = Collision.GetCollider();
+				if (Collider == _Player || Collider == _CPU)
+				{
+					Speed += ACCELERATION;
+					Direction = NewDirection(Collision);
+					TouchTimer -= (float)delta;
+					if (TouchTimer <= 0 && Collider == _CPU)
+					{
+						BackGround.AddScoreToPlayer();
+						NewBall();
+					}
+					else if (TouchTimer <= 0 && Collider == _Player)
+					{
+						BackGround.AddScoreToCPU();
+						NewBall();
+					}
+				}
+				else
+				{
+					Direction = Direction.Bounce(Collision.GetNormal());
+				}
+			}else{
+				TouchTimer=1;
 			}
-			else
-			{
-				Direction = Direction.Bounce(Collision.GetNormal());
-			};
 		}
+
 	}
 
 	public void NewBall()
@@ -64,7 +84,7 @@ public partial class Ball : CharacterBody2D
 		{
 			NewDirection.X = 1;
 		}
-		NewDirection.Y = (dist / Player.PaddleHight / 2) *5;
+		NewDirection.Y = (dist / Player.PaddleHight / 2) * 5;
 		return NewDirection.Normalized();
 	}
 	public Godot.Vector2 RandomDirection()

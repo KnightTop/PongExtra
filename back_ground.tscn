@@ -28,9 +28,11 @@ texture = ExtResource("1_lnusq")
 offset = Vector2(576, 324)
 script = ExtResource("2_1od5a")
 
-[node name="Player" type="StaticBody2D" parent="."]
+[node name="Player" type="StaticBody2D" parent="." node_paths=PackedStringArray("BackGround", "PauseLabel")]
 position = Vector2(50, 324)
 script = ExtResource("3_1knjl")
+BackGround = NodePath("..")
+PauseLabel = NodePath("../HUD/PauseLabel")
 metadata/_edit_group_ = true
 
 [node name="ColorRect3" type="ColorRect" parent="Player"]
@@ -67,9 +69,10 @@ grow_vertical = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource("RectangleShape2D_lnusq")
 
-[node name="CPU" type="StaticBody2D" parent="."]
+[node name="CPU" type="StaticBody2D" parent="." node_paths=PackedStringArray("BackGround")]
 position = Vector2(1082, 324)
 script = ExtResource("4_x2f2x")
+BackGround = NodePath("..")
 metadata/_edit_group_ = true
 
 [node name="ColorRect" type="ColorRect" parent="CPU"]
@@ -86,12 +89,13 @@ color = Color(1, 0.662094, 0.609397, 1)
 position = Vector2(10, 0)
 shape = SubResource("RectangleShape2D_bc5rx")
 
-[node name="Ball" type="CharacterBody2D" parent="." node_paths=PackedStringArray("_Player", "_CPU")]
+[node name="Ball" type="CharacterBody2D" parent="." node_paths=PackedStringArray("_Player", "_CPU", "BackGround")]
 position = Vector2(576, 324)
 collision_mask = 3
 script = ExtResource("5_sbwnb")
 _Player = NodePath("../Player")
 _CPU = NodePath("../CPU")
+BackGround = NodePath("..")
 metadata/_edit_group_ = true
 
 [node name="ColorRect" type="ColorRect" parent="Ball"]
@@ -156,6 +160,17 @@ offset_bottom = 71.0
 theme_override_fonts/font = ExtResource("3_7emc8")
 theme_override_font_sizes/font_size = 52
 text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PauseLabel" type="Label" parent="HUD"]
+offset_left = 244.0
+offset_top = 102.0
+offset_right = 544.0
+offset_bottom = 152.0
+theme_override_fonts/font = ExtResource("3_7emc8")
+theme_override_font_sizes/font_size = 50
+text = "Paused"
 horizontal_alignment = 1
 vertical_alignment = 1
 
